@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DTL Studio</string>
+    <string name="tab_logs">Logs</string>
+    <string name="tab_timeline">Timeline</string>
+</resources>

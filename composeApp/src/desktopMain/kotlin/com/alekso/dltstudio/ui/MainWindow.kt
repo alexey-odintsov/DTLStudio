@@ -44,6 +44,10 @@ import com.alekso.dltstudio.logs.search.SearchType
 import com.alekso.dltstudio.model.LogMessage
 import com.alekso.dltstudio.timeline.TimeLinePanel
 import com.alekso.dltstudio.timeline.TimelineViewModel
+import dltstudio.composeapp.generated.resources.Res
+import dltstudio.composeapp.generated.resources.tab_logs
+import dltstudio.composeapp.generated.resources.tab_timeline
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.splitpane.ExperimentalSplitPaneApi
 import org.jetbrains.compose.splitpane.rememberSplitPaneState
 import java.io.File
@@ -194,7 +198,15 @@ fun MainWindow(
                 }
             }))
         {
-            TabsPanel(tabIndex, listOf("Logs", "Timeline", "Device Analyse"), tabClickListener)
+            TabsPanel(
+                tabIndex,
+                listOf(
+                    stringResource(Res.string.tab_logs),
+                    stringResource(Res.string.tab_timeline),
+                    "Device Analyse",
+                    ),
+                tabClickListener
+            )
 
             when (tabIndex) {
                 0 -> {

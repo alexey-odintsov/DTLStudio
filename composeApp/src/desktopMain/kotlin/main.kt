@@ -21,6 +21,9 @@ import com.alekso.dltstudio.ui.FileChooserDialog
 import com.alekso.dltstudio.ui.FileChooserDialogState
 import com.alekso.dltstudio.ui.MainWindow
 import com.alekso.logger.Log
+import dltstudio.composeapp.generated.resources.Res
+import dltstudio.composeapp.generated.resources.app_name
+import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,7 +43,7 @@ fun main() = application {
             Log.d("Application closed")
             exitApplication()
         },
-        title = "DLT Studio",
+        title = stringResource(Res.string.app_name),
         state = WindowState(width = 1280.dp, height = 768.dp)
     ) {
 
