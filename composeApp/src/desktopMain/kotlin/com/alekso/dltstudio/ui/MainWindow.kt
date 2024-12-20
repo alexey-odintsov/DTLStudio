@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -32,6 +33,8 @@ import com.alekso.dltstudio.RowContextMenuCallbacks
 import com.alekso.dltstudio.db.virtualdevice.VirtualDeviceMock
 import com.alekso.dltstudio.device.analyse.DeviceAnalysePanel
 import com.alekso.dltstudio.device.analyse.DeviceAnalyzeViewModel
+import com.alekso.dltstudio.files.FilesPanel
+import com.alekso.dltstudio.files.FilesViewModel
 import com.alekso.dltstudio.logs.LogsPanel
 import com.alekso.dltstudio.logs.LogsToolbarCallbacks
 import com.alekso.dltstudio.logs.LogsToolbarState
@@ -61,6 +64,7 @@ fun MainWindow(
     mainViewModel: MainViewModel,
     timelineViewModel: TimelineViewModel,
     deviceAnalyzeViewModel: DeviceAnalyzeViewModel,
+    filesViewModel: FilesViewModel,
     progress: Float,
     onProgressUpdate: (Float) -> Unit
 ) {
@@ -192,10 +196,12 @@ fun MainWindow(
                     }
                     return false
                 }
-            }))
-        {
-            TabsPanel(tabIndex, listOf("Logs", "Timeline", "Device Analyse"), tabClickListener)
+            })
+    )
+    {
+        TabsPanel(tabIndex, listOf("Logs", "Timeline", "Device Analyse", "Files"), tabClickListener)
 
+        Row(Modifier.weight(1f)) {
             when (tabIndex) {
                 0 -> {
                     LogsPanel(
@@ -277,15 +283,24 @@ fun MainWindow(
                     modifier = Modifier.weight(1f),
                     deviceAnalyzeViewModel = deviceAnalyzeViewModel
                 )
+
+                3 -> FilesPanel(
+                    viewModel = filesViewModel,
+                    logMessages = mainViewModel.logMessages,
+                    analyzeState = filesViewModel.analyzeState.value,
+                    files = filesViewModel.filesEntriesMap,
+                )
+
             }
-            Divider()
-            val statusText = if (mainViewModel.logMessages.isNotEmpty()) {
-                "Messages: ${"%,d".format(mainViewModel.logMessages.size)}"
-            } else {
-                "No file loaded"
-            }
-            StatusBar(modifier = Modifier.fillMaxWidth(), progress, statusText)
         }
+        Divider()
+        val statusText = if (mainViewModel.logMessages.isNotEmpty()) {
+            "Messages: ${"%,d".format(mainViewModel.logMessages.size)}"
+        } else {
+            "No file loaded"
+        }
+        StatusBar(modifier = Modifier.fillMaxWidth(), progress, statusText)
+    }
 }
 
 @Preview
@@ -301,6 +316,7 @@ fun PreviewMainWindow() {
             ),
             TimelineViewModel({}),
             DeviceAnalyzeViewModel({}),
+            FilesViewModel { },
             1f,
             {})
     }

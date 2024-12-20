@@ -14,6 +14,7 @@ import com.alekso.dltstudio.db.DBFactory
 import com.alekso.dltstudio.db.virtualdevice.VirtualDeviceRepository
 import com.alekso.dltstudio.db.virtualdevice.VirtualDeviceRepositoryImpl
 import com.alekso.dltstudio.device.analyse.DeviceAnalyzeViewModel
+import com.alekso.dltstudio.files.FilesViewModel
 import com.alekso.dltstudio.logs.insights.InsightsRepository
 import com.alekso.dltstudio.preferences.Preferences
 import com.alekso.dltstudio.timeline.TimelineViewModel
@@ -65,6 +66,7 @@ fun main() = application {
             }
             val timelineViewModel = remember { TimelineViewModel(onProgressUpdate) }
             val deviceAnalyzeViewModel = remember { DeviceAnalyzeViewModel(onProgressUpdate) }
+            val filesViewModel = remember { FilesViewModel(onProgressUpdate) }
 
             var stateIOpenFileDialog by remember { mutableStateOf(FileChooserDialogState()) }
 
@@ -200,6 +202,7 @@ fun main() = application {
                 mainViewModel,
                 timelineViewModel,
                 deviceAnalyzeViewModel,
+                filesViewModel,
                 progress,
                 onProgressUpdate
             )

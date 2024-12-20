@@ -91,7 +91,7 @@ fun Long.toHex(bytes: Int): String {
 
 
 fun ByteArray.toHex(): String =
-    joinToString(separator = " ", limit = 256) { eachByte -> "%02x".format(eachByte) }
+    joinToString(separator = " ") { eachByte -> "%02x".format(eachByte) }
 // endregion
 
 
