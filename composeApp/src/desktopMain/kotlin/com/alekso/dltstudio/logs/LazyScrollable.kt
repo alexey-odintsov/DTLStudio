@@ -63,7 +63,6 @@ fun LazyScrollable(
                         "#",
                         "DateTime",
                         "Time",
-                        "ecu",
                         "ecuId",
                         "sessId",
                         "appId",
@@ -85,19 +84,18 @@ fun LazyScrollable(
                     val sTime: String = TimeFormatter.formatDateTime(dltMessage.timeStampNano)
                     val sTimeOffset: String =
                         if (dltMessage.standardHeader.timeStamp != null) "%.4f".format(dltMessage.standardHeader.timeStamp!!.toLong() / 10000f) else "-"
-                    val sEcu: String = dltMessage.ecuId
                     val sEcuId: String = "${dltMessage.standardHeader.ecuId}"
                     val sSessionId: String = "${dltMessage.standardHeader.sessionId}"
                     val sApplicationId: String = "${dltMessage.extendedHeader?.applicationId}"
                     val sContextId: String = "${dltMessage.extendedHeader?.contextId}"
-                    val sContent: String = dltMessage.payload
+                    val sContent: String = dltMessage.payloadText() ?: ""
                     val logTypeIndicator: LogTypeIndicator? =
                         LogTypeIndicator.fromMessageType(dltMessage.extendedHeader?.messageInfo?.messageTypeInfo)
 
                     RowContextMenu(
                         i = i,
                         message = logMessage,
-                        rowContent = "$index $sTime $sTimeOffset $sEcu $sEcuId $sSessionId $sApplicationId $sContextId $sContent",
+                        rowContent = "$index $sTime $sTimeOffset $sEcuId $sSessionId $sApplicationId $sContextId $sContent",
                         rowContextMenuCallbacks = rowContextMenuCallbacks,
                     ) {
                         LogRow(
@@ -122,7 +120,6 @@ fun LazyScrollable(
                             index.toString(),
                             sTime,
                             sTimeOffset,
-                            sEcu,
                             sEcuId,
                             sSessionId,
                             sApplicationId,

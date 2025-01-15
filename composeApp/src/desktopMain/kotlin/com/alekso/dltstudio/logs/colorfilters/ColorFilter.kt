@@ -53,7 +53,7 @@ data class ColorFilter(
                 }
 
                 FilterParameter.Payload -> {
-                    checkTextCriteria(criteria, message.payload)
+                    checkTextCriteria(criteria, message.payloadText())
                 }
             }
         }

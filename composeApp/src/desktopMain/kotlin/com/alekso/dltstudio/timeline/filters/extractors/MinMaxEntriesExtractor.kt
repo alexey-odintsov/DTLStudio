@@ -13,7 +13,7 @@ class MinMaxEntriesExtractor : EntriesExtractor {
         regex: Regex,
         extractionType: ExtractionType,
     ): List<TimeLineFloatEntry> {
-        val matches = regex.find(message.payload)!!
+        val matches = regex.find(message.payloadText() ?: "")!!
         val list = mutableListOf<TimeLineFloatEntry>()
         val namedGroupsMap =
             regex.toPattern().namedGroups().entries.associateBy({ it.value }) { it.key }

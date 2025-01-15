@@ -3,29 +3,29 @@ package com.alekso.dltparser.dlt
 import com.alekso.dltparser.dlt.extendedheader.ExtendedHeader
 import com.alekso.dltparser.dlt.standardheader.StandardHeader
 
+enum class PayloadStorageType {
+    Structured,
+    Plain,
+    Binary,
+}
 
 /**
+ * DLT message simplified representations.
  * https://github.com/esrlabs/dlt-core
  */
-data class DLTMessage(
-    // DLT Signature is skipped for memory consumption reason and should always be the same
-    /**
-     * Compounded of timeStampSec and timeStampUs
-     */
+abstract class DLTMessage (
     val timeStampNano: Long,
-    val ecuId: String,
     val standardHeader: StandardHeader,
     val extendedHeader: ExtendedHeader?,
-    val payload: String,
-    // meta info
-    val sizeBytes: Int,
 ) {
+    /**
+     * Payload textual representation - is used by search and timeline parsing.
+     */
+    abstract fun payloadText(): String?
 
-    override fun toString(): String {
-        return "{$timeStampNano, '$ecuId'\n" +
-                " $standardHeader\n" +
-                " $extendedHeader}\n" +
-                " '$payload'}\n" +
-                " meta size bytes: $sizeBytes"
-    }
+    /**
+     * Payload raw bytes - can be used to parse binary data
+     */
+    abstract fun payloadBytes(): ByteArray?
+
 }

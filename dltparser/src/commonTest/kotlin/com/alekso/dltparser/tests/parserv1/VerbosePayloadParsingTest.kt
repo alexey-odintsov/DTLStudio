@@ -1,7 +1,8 @@
 package com.alekso.dltparser.tests.parserv1
 
-import com.alekso.dltparser.DLTParserV1
+import com.alekso.dltparser.DLTParserV2
 import com.alekso.dltparser.Endian
+import com.alekso.dltparser.dlt.PayloadStorageType
 import com.alekso.dltparser.dlt.verbosepayload.Argument
 import com.alekso.dltparser.dlt.verbosepayload.TypeInfo
 import com.alekso.dltparser.readInt
@@ -9,12 +10,13 @@ import org.junit.Assert
 import org.junit.Test
 
 class VerbosePayloadParsingTest {
+    val parser = DLTParserV2(PayloadStorageType.Structured)
 
     @Test
     fun `test TypeInfo parsing`() {
         val data = byteArrayOf(0x00, 0x02, 0x00, 0x00)
         val expected = TypeInfo(typeString = true)
-        val actual = DLTParserV1().parseVerbosePayloadTypeInfo(
+        val actual = parser.parseVerbosePayloadTypeInfo(
             true,
             data.readInt(0, Endian.LITTLE),
             Endian.LITTLE
@@ -26,7 +28,7 @@ class VerbosePayloadParsingTest {
     fun `test TypeInfo parsing 2`() {
         val data = byteArrayOf(0x43, 0x00, 0x00, 0x00)
         val expected = TypeInfo(typeLengthBits = 32, typeUnsigned = true)
-        val actual = DLTParserV1().parseVerbosePayloadTypeInfo(
+        val actual = parser.parseVerbosePayloadTypeInfo(
             true,
             data.readInt(0, Endian.LITTLE),
             Endian.LITTLE
@@ -55,7 +57,7 @@ class VerbosePayloadParsingTest {
 
         // @formatter:on
         val data = raw.map { it.toByte() }.toByteArray()
-        val actual = DLTParserV1().parseVerbosePayload(true, 0, data, 0, Endian.LITTLE)
+        val actual = parser.parseVerbosePayload(true, 0, data, 0, Endian.LITTLE)
         val expected = Argument(
             0x00000200,
             TypeInfo(

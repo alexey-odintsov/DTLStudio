@@ -8,6 +8,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import com.alekso.dltparser.DLTParserV2
+import com.alekso.dltparser.dlt.PayloadStorageType
 import com.alekso.dltstudio.AppTheme
 import com.alekso.dltstudio.MainViewModel
 import com.alekso.dltstudio.db.DBFactory
@@ -57,7 +58,7 @@ fun main() = application {
 
             val mainViewModel = remember {
                 MainViewModel(
-                    dltParser = DLTParserV2(),
+                    dltParser = DLTParserV2(PayloadStorageType.Binary),
                     insightsRepository = InsightsRepository(),
                     onProgressChanged = onProgressUpdate,
                     virtualDeviceRepository = virtualDeviceRepository,

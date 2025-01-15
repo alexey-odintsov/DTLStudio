@@ -13,7 +13,7 @@ data class Argument(
     val payload: ByteArray,
 ) {
     fun getSize(): Int {
-        return 4 + additionalSize + payload.size
+        return additionalSize + payload.size
     }
 
     fun getPayloadAsText(): String {

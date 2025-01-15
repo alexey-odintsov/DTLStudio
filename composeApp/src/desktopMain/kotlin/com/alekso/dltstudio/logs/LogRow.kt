@@ -35,7 +35,6 @@ fun LogRow(
     index: String,
     datetime: String,
     timeOffset: String,
-    ecu: String,
     ecuId: String,
     sessionId: String,
     applicationId: String,
@@ -108,15 +107,6 @@ fun LogRow(
                 modifier = Modifier.width(80.dp).padding(end = 2.dp),
                 textAlign = TextAlign.Right,
                 text = timeOffset,
-                isHeader = isHeader,
-                cellStyle = finalCellStyle,
-                wrapContent = wrapContent,
-            )
-            CellDivider()
-            Cell(
-                modifier = Modifier.width(46.dp),
-                textAlign = TextAlign.Center,
-                text = ecu,
                 isHeader = isHeader,
                 cellStyle = finalCellStyle,
                 wrapContent = wrapContent,
@@ -251,7 +241,6 @@ fun LogRowPreview() {
                 index = (16_345_345 + i).toString(),
                 datetime = "2024-02-04 18:26:23.074689",
                 timeOffset = "1234",
-                ecu = if (i % 3 == 0) "汉语" else "EcuI",
                 ecuId = "EcuId",
                 sessionId = "123",
                 applicationId = "AppId",

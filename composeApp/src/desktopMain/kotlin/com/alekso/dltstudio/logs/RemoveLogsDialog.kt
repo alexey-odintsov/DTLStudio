@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
 import androidx.compose.ui.window.rememberDialogState
-import com.alekso.dltparser.dlt.SampleData
 import com.alekso.dltparser.dlt.extendedheader.MessageType
 import com.alekso.dltparser.dlt.extendedheader.MessageTypeInfo
 import com.alekso.dltstudio.logs.filtering.FilterCriteria
@@ -31,6 +30,7 @@ import com.alekso.dltstudio.model.LogMessage
 import com.alekso.dltstudio.ui.CustomButton
 import com.alekso.dltstudio.ui.CustomDropDown
 import com.alekso.dltstudio.ui.CustomEditText
+import com.alekso.dltstudio.utils.SampleData
 
 
 class RemoveLogsDialogState(
@@ -82,7 +82,7 @@ fun RemoveLogsDialogPanel(
         FilterParameter.MessageTypeInfo to FilterCriteria(
             message?.dltMessage?.extendedHeader?.messageInfo?.messageTypeInfo.toString()
         ),
-        FilterParameter.Payload to FilterCriteria(message?.dltMessage?.payload.toString()),
+        FilterParameter.Payload to FilterCriteria(message?.dltMessage?.payloadText() ?: ""),
     )
 
     var messageType by rememberSaveable { mutableStateOf(filters[FilterParameter.MessageType]?.value) }

@@ -23,12 +23,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.alekso.dltparser.dlt.SampleData
 import com.alekso.dltstudio.logs.insights.LogInsight
 import com.alekso.dltstudio.model.LogMessage
 import com.alekso.dltstudio.model.VirtualDevice
 import com.alekso.dltstudio.ui.Panel
 import com.alekso.dltstudio.ui.TabsPanel
+import com.alekso.dltstudio.utils.SampleData
 
 @Composable
 fun LogPreviewPanel(

@@ -20,15 +20,12 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.alekso.dltparser.dlt.DLTMessage
-import com.alekso.dltparser.dlt.SampleData
-import com.alekso.dltparser.dlt.standardheader.HeaderType
-import com.alekso.dltparser.dlt.standardheader.StandardHeader
 import com.alekso.dltstudio.TimeFormatter
 import com.alekso.dltstudio.logs.insights.LogInsight
 import com.alekso.dltstudio.model.LogMessage
 import com.alekso.dltstudio.ui.CustomButton
 import com.alekso.dltstudio.ui.CustomEditText
+import com.alekso.dltstudio.utils.SampleData
 
 @Composable
 fun DLTSimplifiedInfoView(
@@ -54,7 +51,7 @@ fun DLTSimplifiedInfoView(
                         "${it.extendedHeader?.applicationId} " +
                         "${it.extendedHeader?.contextId} "
                 TableRow(0, "", headerText)
-                TableRow(0, "", it.payload)
+                TableRow(0, "", it.payloadText())
 
                 Header(
                     modifier = paddingModifier.padding(top = 8.dp),
@@ -106,30 +103,12 @@ fun PreviewDLTSimplifiedInfoView() {
 @Preview
 @Composable
 fun PreviewDLTSimplifiedInfoView2() {
-    val standardHeader = StandardHeader(
-        headerType = HeaderType(
-            64.toByte(),
-            useExtendedHeader = false,
-            payloadBigEndian = true,
-            withEcuId = false,
-            withSessionId = false,
-            withTimestamp = false,
-            versionNumber = 1,
-        ),
-        1.toUByte(),
-        10.toUShort()
-    )
-    val payload =
-        "TestView[2797]: onGlobalFocusChanged: oldFocus:com.ui.custom.ProgressBarFrameLayout{f5e8f76 VFE...CL. ......ID 2298,22-2835,709 #7f090453 app:id/theme_container aid=1073741849}, newFocus:com.android.car.ui.FocusParkingView{736743f VFED..... .F...... 0,0-1,1 #7f090194 app:id/focus_parking_view aid=1073741832} {bounds:Rect(0, 0 - 342, 240),hasBoundsTransaction,}"
-    val dltMessage = DLTMessage(
-        1L,
-        "ECU",
-        standardHeader = standardHeader,
-        extendedHeader = null,
-        payload = payload,
-        sizeBytes = 100,
+    val dltMessage = SampleData.create(
+        payloadText = "TestView[2797]: onGlobalFocusChanged: oldFocus:com.ui.custom.ProgressBarFrameLayout{f5e8f76 VFE...CL. ......ID 2298,22-2835,709 #7f090453 app:id/theme_container aid=1073741849}, newFocus:com.android.car.ui.FocusParkingView{736743f VFED..... .F...... 0,0-1,1 #7f090194 app:id/focus_parking_view aid=1073741832} {bounds:Rect(0, 0 - 342, 240),hasBoundsTransaction,}",
     )
     DLTSimplifiedInfoView(
-        modifier = Modifier.height(400.dp).fillMaxWidth(), logMessage = LogMessage(dltMessage), messageIndex = 0
+        modifier = Modifier.height(400.dp).fillMaxWidth(),
+        logMessage = LogMessage(dltMessage),
+        messageIndex = 0
     )
 }

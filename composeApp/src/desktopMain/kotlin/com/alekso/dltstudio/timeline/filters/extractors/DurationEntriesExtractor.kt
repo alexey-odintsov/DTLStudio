@@ -13,7 +13,7 @@ class DurationEntriesExtractor : EntriesExtractor {
         regex: Regex,
         extractionType: ExtractionType,
     ): List<TimeLineDurationEntry> {
-        val matches = regex.find(message.payload)!!
+        val matches = regex.find(message.payloadText() ?: "")!!
         val list = mutableListOf<TimeLineDurationEntry>()
 
         when (extractionType) {

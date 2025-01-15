@@ -48,9 +48,9 @@ class InsightsRepository {
         val insights = mutableListOf<LogInsight>()
         insightRules.value.forEach { rule ->
             val compiledRule = compiledRules[rule.name]
-            val text = logMessage.dltMessage.payload
-            if (compiledRule != null && text.contains(compiledRule.regex)) {
-                val matches = compiledRule.regex.find(logMessage.dltMessage.payload)!!
+            val text = logMessage.dltMessage.payloadText()
+            if (compiledRule != null && text != null && text.contains(compiledRule.regex)) {
+                val matches = compiledRule.regex.find(text)!!
                 insights.add(LogInsight(name = rule.name, text = fillInsightText(rule, matches)))
             }
         }

@@ -28,17 +28,17 @@ fun RowContextMenu(
         },
         )
 
-    message.dltMessage.extendedHeader?.let {
-        menuItems.add(ContextMenuItem("Remove context '${it.contextId}'") {
-            rowContextMenuCallbacks.onRemoveClicked(LogRemoveContext.ContextId, it.contextId)
+    message.dltMessage.extendedHeader?.contextId?.let {
+        menuItems.add(ContextMenuItem("Remove context '${it}'") {
+            rowContextMenuCallbacks.onRemoveClicked(LogRemoveContext.ContextId, it)
         })
     }
 
-    message.dltMessage.extendedHeader?.let {
-        menuItems.add(ContextMenuItem("Remove application '${it.applicationId}'") {
+    message.dltMessage.extendedHeader?.applicationId?.let {
+        menuItems.add(ContextMenuItem("Remove application '${it}'") {
             rowContextMenuCallbacks.onRemoveClicked(
                 LogRemoveContext.ApplicationId,
-                it.applicationId
+                it
             )
         })
     }
@@ -55,7 +55,7 @@ fun RowContextMenu(
         })
     }
 
-    message.dltMessage.payload.let {
+    message.dltMessage.payloadText().let {
         menuItems.add(
             ContextMenuItem("Remove by custom attributes") {
                 rowContextMenuCallbacks.onRemoveDialogClicked(message)

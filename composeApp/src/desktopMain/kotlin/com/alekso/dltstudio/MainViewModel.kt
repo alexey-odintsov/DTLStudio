@@ -284,7 +284,7 @@ class MainViewModel(
                 }
 
                 FilterParameter.Payload -> {
-                    checkTextCriteria(criteria, message.payload)
+                    checkTextCriteria(criteria, message.payloadText())
                 }
             }
         }

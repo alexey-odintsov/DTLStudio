@@ -9,12 +9,12 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
-import com.alekso.dltparser.dlt.SampleData
 import com.alekso.dltstudio.LogRemoveContext
 import com.alekso.dltstudio.RowContextMenuCallbacks
 import com.alekso.dltstudio.logs.colorfilters.ColorFilter
 import com.alekso.dltstudio.model.LogMessage
 import com.alekso.dltstudio.ui.Panel
+import com.alekso.dltstudio.utils.SampleData
 
 @Composable
 fun LogsListPanel(

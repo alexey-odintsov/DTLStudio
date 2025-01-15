@@ -35,7 +35,7 @@ fun DLTDetailedInfoView(
                 )
                 TableRow(
                     parameterRowWidth, "ECU Id",
-                    "'${it.ecuId}'"
+                    "'${it.standardHeader.ecuId}'"
                 )
 
                 Header(
@@ -144,7 +144,7 @@ fun DLTDetailedInfoView(
                     text = "Payload:"
                 )
 
-                TableRow(0, "", it.payload)
+                TableRow(0, "", it.payloadText())
             }
         }
     }
