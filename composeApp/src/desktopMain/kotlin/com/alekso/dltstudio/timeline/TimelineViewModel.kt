@@ -23,11 +23,12 @@ import com.alekso.logger.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
 import java.io.File
 
 private const val PROGRESS_UPDATE_DEBOUNCE_MS = 30
@@ -155,57 +156,26 @@ class TimelineViewModel(
         analyzeJob = CoroutineScope(Dispatchers.IO).launch {
             val start = System.currentTimeMillis()
             if (dltMessages.isNotEmpty()) {
-                val _userEntries = mutableStateMapOf<String, TimeLineEntries<*>>()
-                var _timeStart = Long.MAX_VALUE
-                var _timeEnd = Long.MIN_VALUE
-
+                val updatedEntries = mutableStateMapOf<String, TimeLineEntries<*>>()
                 Log.d("Start Timeline building .. ${dltMessages.size} messages")
 
-                val regexps = mutableListOf<Regex?>()
-                // prefill timeline data holders
-                timelineFilters.forEachIndexed { index, timelineFilter ->
-                    _userEntries[timelineFilter.key] = timelineFilter.diagramType.createEntries()
-                    highlightedKeysMap[timelineFilter.key] = null
 
-                    // precompile regex in advance
-                    regexps.add(index, timelineFilter.extractPattern?.toRegex())
-                }
-
-                var prevTs = System.currentTimeMillis()
-                dltMessages.forEachIndexed { index, message ->
-                    yield()
-                    // timeStamps
-                    val ts = message.dltMessage.timeStampNano
-                    if (ts > _timeEnd) {
-                        _timeEnd = ts
-                    }
-                    if (ts < _timeStart) {
-                        _timeStart = ts
-                    }
-
-                    timelineFilters.forEachIndexed { i, timelineFilter ->
-                        if (timelineFilter.enabled && regexps[i] != null) {
-                            analyzeEntriesRegex(
-                                message.dltMessage,
-                                timelineFilter,
-                                regexps[i]!!,
-                                _userEntries[timelineFilter.key]!!
-                            )
+                val filterJobs = timelineFilters.map { filter ->
+                    async {
+                        val entries = analyzeTimelineFilter(filter, dltMessages)
+                        if (entries != null) {
+                            updatedEntries[filter.key] = entries
                         }
                     }
-                    val nowTs = System.currentTimeMillis()
-                    if (nowTs - prevTs > PROGRESS_UPDATE_DEBOUNCE_MS) {
-                        prevTs = nowTs
-                        onProgressChanged(index.toFloat() / dltMessages.size)
-                    }
                 }
+                filterJobs.awaitAll()
 
                 withContext(Dispatchers.Default) {
                     // we need copies of ParseSession's collections to prevent ConcurrentModificationException
                     entriesMap.clear()
-                    entriesMap.putAll(_userEntries)
-                    timeStart = _timeStart
-                    timeEnd = _timeEnd
+                    entriesMap.putAll(updatedEntries)
+                    timeStart = dltMessages.first().dltMessage.timeStampNano
+                    timeEnd = dltMessages.last().dltMessage.timeStampNano
                     _analyzeState.value = AnalyzeState.IDLE
                 }
                 onProgressChanged(1f)
@@ -214,6 +184,28 @@ class TimelineViewModel(
         }
     }
 
+    private fun analyzeTimelineFilter(
+        filter: TimelineFilter,
+        dltMessages: SnapshotStateList<LogMessage>
+    ): TimeLineEntries<*>? {
+        if (!filter.enabled) return null
+        val regexp = filter.extractPattern?.toRegex() ?: return null
+
+        println("Start analyzing filter ${filter.name}")
+        val timelineEntries = filter.diagramType.createEntries()
+        highlightedKeysMap[filter.key] = null
+
+        dltMessages.forEachIndexed { index, message ->
+            analyzeEntriesRegex(
+                message.dltMessage,
+                filter,
+                regexp,
+                timelineEntries
+            )
+        }
+        println("Finish analyzing filter ${filter.name} found ${timelineFilters.size} entries")
+        return timelineEntries
+    }
 
     private fun analyzeEntriesRegex(
         message: DLTMessage,
